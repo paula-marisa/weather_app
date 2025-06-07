@@ -4,8 +4,10 @@ import 'package:lottie/lottie.dart';
 import 'package:intl/intl.dart';
 
 import '../providers/weather_provider.dart';
+import '../providers/locale_provider.dart';
 import 'widgets/weather_card.dart';
 import 'widgets/forecast_list.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -32,8 +34,35 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<WeatherProvider>();
+    final localeProvider = context.watch<LocaleProvider>();
+    final t = AppLocalizations.of(context)!;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(t.appTitle),
+        actions: [
+          PopupMenuButton<Locale?>(
+            icon: const Icon(Icons.language),
+            onSelected: (locale) {
+              context.read<LocaleProvider>().setLocale(locale);
+            },
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                value: null,
+                child: Text(t.systemLanguage),
+              ),
+              const PopupMenuItem(
+                value: Locale('en'),
+                child: Text('English'),
+              ),
+              const PopupMenuItem(
+                value: Locale('pt', 'BR'),
+                child: Text('Português'),
+              ),
+            ],
+          ),
+        ],
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -57,8 +86,7 @@ class _HomePageState extends State<HomePage> {
                       child: TextField(
                         controller: _controller,
                         decoration: InputDecoration(
-                          hintText:
-                              'Escrever a cidade a procurar e clicar no botão',
+                          hintText: t.searchHint,
                           prefixIcon: const Icon(
                             Icons.search,
                             color: Colors.white70,
@@ -79,8 +107,10 @@ class _HomePageState extends State<HomePage> {
                         Icons.arrow_forward_ios,
                         color: Colors.white,
                       ),
-                      onPressed:
-                          () => provider.loadWeather(_controller.text.trim()),
+                      onPressed: () => provider.loadWeather(
+                        _controller.text.trim(),
+                        localeProvider.locale ?? Localizations.localeOf(context),
+                      ),
                     ),
                   ],
                 ),
@@ -93,18 +123,17 @@ class _HomePageState extends State<HomePage> {
                   child: Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Icon(
+                      children: [
+                        const Icon(
                           Icons.wb_sunny_outlined,
                           size: 64,
                           color: Colors.white70,
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Text(
-                          'Bem-vindo ao Weather App!\n\n'
-                          'Digite o nome de uma cidade acima e veja a metereologia em tempo real.',
+                          t.welcomeMessage,
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white70, fontSize: 18),
+                          style: const TextStyle(color: Colors.white70, fontSize: 18),
                         ),
                       ],
                     ),
@@ -117,7 +146,7 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: Text(
-                      provider.error!,
+                      t.fetchError,
                       style: const TextStyle(color: Colors.redAccent),
                     ),
                   )
@@ -139,7 +168,7 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Text(
-                      'Atualizado em: ${DateFormat.Hm().format(DateTime.now())}',
+                      t.updatedAt(DateFormat.Hm().format(DateTime.now())),
                       style: const TextStyle(color: Colors.white70),
                     ),
                   ),

@@ -1,0 +1,15 @@
+{
+  "appTitle": "Weather App",
+  "searchHint": "Type the city name and press the button",
+  "welcomeMessage": "Welcome to Weather App!\n\nType a city name above and see the live forecast.",
+  "updatedAt": "Updated at: {time}",
+  "@updatedAt": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "systemLanguage": "System language",
+  "languageEnglish": "English",
+  "languagePortuguese": "Portuguese",
+  "fetchError": "Error fetching weather data"
+}

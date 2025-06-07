@@ -1,0 +1,15 @@
+{
+  "appTitle": "Weather App",
+  "searchHint": "Escreva a cidade e pressione o botão",
+  "welcomeMessage": "Bem-vindo ao Weather App!\n\nDigite o nome de uma cidade acima e veja a meteorologia em tempo real.",
+  "updatedAt": "Atualizado em: {time}",
+  "@updatedAt": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "systemLanguage": "Idioma do sistema",
+  "languageEnglish": "Inglês",
+  "languagePortuguese": "Português",
+  "fetchError": "Erro ao buscar clima"
+}

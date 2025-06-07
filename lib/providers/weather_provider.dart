@@ -16,14 +16,15 @@ class WeatherProvider extends ChangeNotifier {
   bool get loading => _loading;
   String? get error => _error;
 
-  Future<void> loadWeather(String city) async {
+  Future<void> loadWeather(String city, Locale locale) async {
     _loading = true;
     _error = null;
     notifyListeners();
 
     try {
-      _weather = await _service.fetchWeather(city);
-      _forecasts = await _service.fetchForecast(city);
+      final lang = locale.languageCode == 'pt' ? 'pt_br' : 'en';
+      _weather = await _service.fetchWeather(city, lang);
+      _forecasts = await _service.fetchForecast(city, lang);
     } catch (e) {
       _error = e.toString();
       _weather = null;

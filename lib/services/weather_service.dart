@@ -6,20 +6,20 @@ import '../models/forecast.dart';
 class WeatherService {
   final String _apiKey = '25ba51264d1b1f03fcf0f9fb70ce00f7';
 
-  Future<Weather> fetchWeather(String city) async {
+  Future<Weather> fetchWeather(String city, String lang) async {
     final query = Uri.encodeComponent(city);
     final uri = Uri.parse(
-      'https://api.openweathermap.org/data/2.5/weather?q=$query&appid=$_apiKey&units=metric&lang=pt_br',
+      'https://api.openweathermap.org/data/2.5/weather?q=$query&appid=$_apiKey&units=metric&lang=$lang',
     );
     final response = await http.get(uri);
     if (response.statusCode == 200) {
       return Weather.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Erro ao buscar clima: ${response.statusCode}');
+      throw Exception('Error ${response.statusCode}');
     }
   }
 
-  Future<List<Forecast>> fetchForecast(String city) async {
+  Future<List<Forecast>> fetchForecast(String city, String lang) async {
     final query = Uri.encodeComponent(city);
     final geoUri = Uri.parse(
       'https://api.openweathermap.org/geo/1.0/direct?q=$query&limit=1&appid=$_apiKey',
@@ -31,7 +31,7 @@ class WeatherService {
     final uri = Uri.parse(
       'https://api.openweathermap.org/data/2.5/onecall?'
           'lat=$lat&lon=$lon&exclude=current,minutely,hourly,alerts'
-          '&units=metric&lang=pt_br&appid=$_apiKey',
+          '&units=metric&lang=$lang&appid=$_apiKey',
     );
     final res = await http.get(uri);
 
